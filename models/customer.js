@@ -94,6 +94,27 @@ class Customer {
     return results.rows.map(c => new Customer(c));
   }
 
+
+  // bestCustomers: return 10 customers who have the most reservations:
+        // select c.id, c.first_name, c.last_name, count(r.id) as total_reservations
+        // from customers as c
+        // join reservations as r on c.id = r.customer_id
+        // group by c.last_name, c.first_name, c.id
+        // order by count(r.customer_id) desc, c.last_name asc
+        // limit 10
+  static async bestCustomers() {
+    const results = await db.query(
+        `SELECT c.id, c.first_name AS "firstName", c.last_name AS "lastName"
+        FROM customers as c
+        JOIN reservations AS r ON c.id = r.customer_id
+        GROUP BY c.last_name, c.first_name, c.id
+        ORDER BY COUNT(r.customer_id) DESC, c.last_name ASC
+        LIMIT 10`
+    );
+    return results.rows.map(c => new Customer(c));
+  }
+
+
 }
 
 module.exports = Customer;

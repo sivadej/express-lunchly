@@ -18,11 +18,23 @@ router.get("/", async function (req, res, next) {
   }
 });
 
-//customer search
-router.get('/search', async(req,res,next)=>{
+// customer search
+router.get('/search', async (req, res, next) => {
   try {
     console.log(req.query.q)
     const customers = await Customer.searchByName(req.query.q);
+    return res.render("customer_list.html", { customers });
+  }
+  catch (err) {
+    return next(err);
+  }
+})
+
+// best customers
+router.get('/best-customers', async (req, res, next) => {
+  try {
+    const customers = await Customer.bestCustomers();
+    console.log(customers);
     return res.render("customer_list.html", { customers });
   }
   catch (err) {
