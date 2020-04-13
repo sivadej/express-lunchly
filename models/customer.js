@@ -60,6 +60,7 @@ class Customer {
   }
 
   /** save this customer. */
+  // this method either adds new customer or edits existing
 
   async save() {
     if (this.id === undefined) {
