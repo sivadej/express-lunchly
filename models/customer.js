@@ -78,6 +78,11 @@ class Customer {
       );
     }
   }
+
+  // return full name of this customer separated by a space
+  fullName() {
+    return(`${this.firstName} ${this.lastName}`);
+  }
 }
 
 module.exports = Customer;
