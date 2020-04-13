@@ -39,7 +39,31 @@ class Reservation {
     return results.rows.map(row => new Reservation(row));
   }
 
+  // get reservation by id
+  static async get(id) {
+    const results = await db.query(
+      `SELECT id,
+        num_guests AS "numGuests", 
+        start_at AS "startAt", 
+        notes AS "notes"
+      FROM reservations 
+      WHERE id = $1`,
+      [id]
+    );
+
+    const reservation = results.rows[0];
+
+    if (reservation === undefined) {
+      const err = new Error(`No such customer: ${id}`);
+      err.status = 404;
+      throw err;
+    }
+    
+    return new Reservation(reservation);
+  }
+
   async save() {
+    console.log(this.id);
     if (this.id === undefined) {
       const result = await db.query(
         `INSERT INTO reservations (customer_id, num_guests, start_at, notes)
@@ -51,13 +75,13 @@ class Reservation {
     }
     else {
       await db.query(
-        `UPDATE reservations SET customer_id=$1, num_guests=$2, start_at=$3, notes=$4
-            WHERE id=$5`,
-        [this.customerId, this.numGuests, this.startAt, this.notes, this.id]
+        `UPDATE reservations SET num_guests=$1, start_at=$2, notes=$3
+            WHERE id=$4`,
+        [this.numGuests, this.startAt, this.notes, this.id]
       );
     }
   }
-  
+
 }
 
 
